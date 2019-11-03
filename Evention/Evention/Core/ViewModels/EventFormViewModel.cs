@@ -13,17 +13,21 @@ namespace Evention.Core.ViewModels
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Yer")]
         public string Venue { get; set; }
 
         [Required]
         [FutureDate]
+        [Display(Name = "Tarih")]
         public string Date { get; set; }
 
         [Required]
         [ValidTime]
+        [Display(Name = "Zaman")]
         public string Time { get; set; }
 
         [Required]
+        [Display(Name = "Tür")]
         public byte Genre { get; set; }
 
         public IEnumerable<Genre> Genres { get; set; }
