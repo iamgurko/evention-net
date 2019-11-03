@@ -1,0 +1,64 @@
+﻿@model Evention.Core.ViewModels.EventsViewModel
+@{
+    ViewBag.Title = "Anasayfa";
+}
+<h1>@Model.Heading</h1>
+@using (Html.BeginForm("Search", "Etkinlikler"))
+{
+    <div class="form-group">
+        <div id="searchEvents" class="input-group">
+            @Html.TextBoxFor(m => m.SearchTerm, new { @class = "form-control", placeholder = "Arama..." })
+            <span class="input-group-addon">
+                <i class="glyphicon glyphicon-search"></i>
+            </span>            
+        </div>
+    </div>
+}
+<ul id="events" class="events voffset4">
+    @foreach (var etkinlik in Model.UpcomingEvents)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @etkinlik.DateTime.ToString("MMM")
+                </div>
+                <div class="day">
+                    @etkinlik.DateTime.ToString("d ")
+                </div>
+            </div>
+            <div class="details">
+                <span class="artist">
+                    <a href="@Url.Action("Detaylar", "Etkinlikler", new { id = etkinlik.Id })">
+                        @etkinlik.Artist.Name
+                    </a>
+                    
+                    @if (etkinlik.IsCanceled)
+                    {
+                        <span class="label label-warning">İptal Edildi</span>
+                    }
+                </span>
+                <span class="genre">
+                    @etkinlik.Genre.Name
+                </span>
+                @if (Model.ShowActions && !etkinlik.IsCanceled)
+                {
+                    <button 
+                        data-event-id="@etkinlik.Id" 
+                        class="btn 
+                            @(Model.Attendances.Contains(etkinlik.Id) ? "btn-info" : "btn-default") 
+                            btn-sm js-toggle-attendance">
+                        @(Model.Attendances.Contains(etkinlik.Id)? "Katılacağım": "Katılıyor musun ?")
+                    </button>
+                }
+            </div>
+        </li>
+    }
+</ul>
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            EventsController.init("#events");
+        });
+    </script>
+}
